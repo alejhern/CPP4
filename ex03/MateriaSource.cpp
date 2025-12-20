@@ -11,9 +11,10 @@
 /* ************************************************************************** */
 
 #include "MateriaSource.hpp"
+#include "colors.h"
 #include <iostream>
 
-// MateriaSource Constructor
+/* 🧪 Constructor */
 MateriaSource::MateriaSource()
 {
 	int	i;
@@ -21,75 +22,108 @@ MateriaSource::MateriaSource()
 	i = -1;
 	while (++i < 4)
 		_materias[i] = NULL;
+	std::cout << BOLD << GRN << "📦 [MateriaSource] Initialized and ready" << RST << std::endl;
 }
 
-// MateriaSource Copy Constructor
+/* ===================================================== */
+/* 🧬 Copy Constructor */
 MateriaSource::MateriaSource(const MateriaSource &other)
-{
-	*this = other;
-}
-
-// MateriaSource Destructor
-MateriaSource::~MateriaSource()
 {
 	int	i;
 
 	i = -1;
 	while (++i < 4)
-	{
-		if (_materias[i])
-			delete _materias[i];
-	}
+		_materias[i] = NULL;
+	*this = other;
+	std::cout << BOLD << BLU << "🧬 [MateriaSource] Clone created" << RST << std::endl;
 }
 
-// MateriaSource Assignment Operator
+/* ===================================================== */
+/* ☠️ Destructor */
+MateriaSource::~MateriaSource()
+{
+	int	i;
+	
+	i = -1;
+	while (++i < 4)
+	{
+		if (_materias[i])
+		{
+			std::cout << DIM << RED << "💀 [MateriaSource] Destroying materia → " << _materias[i]->getType() << RST << std::endl;
+			delete _materias[i];
+		}
+	}
+	std::cout << BOLD << RED << "☠️  [MateriaSource] Shutdown complete" << RST << std::endl;
+}
+
+/* ===================================================== */
+/* 🔁 Assignment Operator */
 MateriaSource &MateriaSource::operator=(const MateriaSource &other)
 {
 	int	i;
-
-	if (this != &other)
+	
+	if (this == &other)
 	{
-		i = -1;
-		while (++i < 4)
+		std::cout << DIM << MAG << "⚠️ [MateriaSource] Self-assignment ignored" << RST << std::endl;
+		return (*this);
+	}
+	std::cout << YEL << "🔁 [MateriaSource] Overwriting stored materias" << RST << std::endl;
+	i = -1;
+	while (++i < 4)
+	{
+		if (_materias[i])
+			delete _materias[i];
+		if (other._materias[i])
 		{
-			if (_materias[i])
-				delete _materias[i];
-			if (other._materias[i])
-				_materias[i] = other._materias[i]->clone();
-			else
-				_materias[i] = NULL;
+			_materias[i] = other._materias[i]->clone();
+			std::cout << GRN << "✔ Cloned materia [" << _materias[i]->getType() << "] into slot " << i << RST << std::endl;
 		}
+		else
+			_materias[i] = NULL;
 	}
 	return (*this);
 }
 
-// Learn materia method
+/* ===================================================== */
+/* 📚 Learn Materia */
 void MateriaSource::learnMateria(AMateria *m)
 {
 	int		i;
-
+	
+	if (!m)
+	{
+		std::cout << DIM << MAG << "⚠️ [MateriaSource] Cannot learn NULL materia" << RST << std::endl;
+		return ;
+	}
 	i = -1;
 	while (++i < 4)
 	{
 		if (!_materias[i])
 		{
 			_materias[i] = m;
+			std::cout << BOLD << GRN << "📘 [MateriaSource] Learned " << CYN << m->getType() << GRN << " in slot " << i << RST << std::endl;
 			return ;
 		}
 	}
-	std::cout << "MateriaSource inventory full, cannot learn more materias." << std::endl;
-	delete m;
+	std::cout << BOLD << RED << "🚫 [MateriaSource] Storage FULL — rejected " << YEL << m->getType() << RST << std::endl;
+	delete	m;
 }
 
-// Create materia method
+/* ===================================================== */
+/* 🧪 Create Materia */
 AMateria *MateriaSource::createMateria(std::string const &type)
 {
-	int		i;
+	int i;
 
 	i = -1;
 	while (++i < 4)
+	{
 		if (_materias[i] && _materias[i]->getType() == type)
+		{
+			std::cout << BOLD << CYN << "🧪 [MateriaSource] Creating materia → " << YEL << type << RST << std::endl;
 			return (_materias[i]->clone());
-	std::cout << "Materia of type: " << type << " not found!" << std::endl;
+		}
+	}
+	std::cout << BOLD << RED << "❌ [MateriaSource] Materia type not found → " << YEL << type << RST << std::endl;
 	return (NULL);
 }

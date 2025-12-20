@@ -9,87 +9,130 @@
 /*   Updated: 2025/12/19 14:33:48 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "AMateria.hpp"
 #include "Character.hpp"
 #include "MateriaSource.hpp"
 #include "ICharacter.hpp"
+#include "colors.h"
 #include <iostream>
 
-int	main(void)
+#define LINE CYN << "════════════════════════════════════════════════════════════" << RST
+
+void banner(const std::string &title)
 {
-	{
-		IMateriaSource *src = new MateriaSource();
-		src->learnMateria(new Ice());
-		src->learnMateria(new Cure());
-		ICharacter *me = new Character("me");
-		AMateria *tmp;
-		tmp = src->createMateria("ice");
-		me->equip(tmp);
-		tmp = src->createMateria("cure");
-		me->equip(tmp);
-		ICharacter *bob = new Character("bob");
-		me->use(0, *bob);
-		me->use(1, *bob);
-		std::cout << std::endl;
+	std::cout << "\n" << LINE << std::endl;
+	std::cout << BOLD << MAG << "💥 " << title << " 💥" << RST << std::endl;
+	std::cout << LINE << "\n" << std::endl;
+}
 
-		delete bob;
-		delete me;
-		delete src;
-	}
-	{
-		std::cout << "1. Create new MateriaSource and learn materias (check maximum too):" << std::endl;
-		IMateriaSource *src = new MateriaSource();
-		src->learnMateria(new Ice());
-		src->learnMateria(new Cure());
-		src->learnMateria(new Ice());
-		src->learnMateria(new Cure());
-		AMateria *mat = new Cure();
-		src->learnMateria(mat);
-		std::cout << std::endl;
+int main(void)
+{
+	std::cout << BOLD << RED;
+	std::cout <<
+	"███╗   ███╗ █████╗ ████████╗███████╗██████╗ ██╗ █████╗ \n"
+	"████╗ ████║██╔══██╗╚══██╔══╝██╔════╝██╔══██╗██║██╔══██╗\n"
+	"██╔████╔██║███████║   ██║   █████╗  ██████╔╝██║███████║\n"
+	"██║╚██╔╝██║██╔══██║   ██║   ██╔══╝  ██╔══██╗██║██╔══██║\n"
+	"██║ ╚═╝ ██║██║  ██║   ██║   ███████╗██║  ██║██║██║  ██║\n"
+	"╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝\n";
+	std::cout << RST << std::endl;
 
-		std::cout << "2. Create 2 new characters and test deep copy:" << std::endl;
-		Character *dur0 = new Character("Alice");
-		ICharacter *dur1 = new Character(*dur0);
-		delete dur0;
-		delete dur1;
-		std::cout << std::endl;
+	std::cout << BOLD << YEL << "🧙‍♂️ CPP04 - EX03 | MATERIA SYSTEM: FINAL BOSS TEST\n" << RST;
 
-		std::cout << "3. Create materias and equip them (also check unknown materias):" << std::endl;
-		AMateria *tmp;
-		ICharacter *dur2 = new Character("Alice");
-		tmp = src->createMateria("ice");
-		dur2->equip(tmp);
-		tmp = src->createMateria("cure");
-		dur2->equip(tmp);
-        tmp = src->createMateria("hi");
-        dur2->equip(tmp);
-		dur2->equip(new Cure());
-        dur2->equip(new Ice());
-		delete src;
-		std::cout << std::endl;
+	/* ===================================================== */
+	banner("📦 MATERIA SOURCE BOOT SEQUENCE");
 
-		std::cout << "4. Check maximum equipped too:" << std::endl;
-		AMateria *cure = new Cure();
-		AMateria *ice = new Ice();
-		dur2->equip(cure);
-        dur2->equip(ice);
-		dur2->unequip(2);
-		dur2->unequip(2);
-		dur2->unequip(6);
-		std::cout << std::endl;
-		std::cout << "5. Use materias on new chacarter:" << std::endl;
-		ICharacter *bob = new Character("Bob");
-		dur2->use(3, *bob);
-		dur2->use(0, *bob);
-		dur2->use(1, *bob);
-		dur2->use(2, *bob);
-		dur2->use(6, *bob);
-		dur2->use(-4, *bob);
-		delete bob;
-		std::cout << std::endl;
+	IMateriaSource *src = new MateriaSource();
 
-		delete dur2;
-	}
-    return (0);
+	std::cout << GRN << "➕ Learning ICE" << RST << std::endl;
+	src->learnMateria(new Ice());
+
+	std::cout << GRN << "➕ Learning CURE" << RST << std::endl;
+	src->learnMateria(new Cure());
+
+	std::cout << GRN << "➕ Learning ICE (again)" << RST << std::endl;
+	src->learnMateria(new Ice());
+
+	std::cout << GRN << "➕ Learning CURE (again)" << RST << std::endl;
+	src->learnMateria(new Cure());
+
+	std::cout << RED << "💀 Attempting forbidden 5th materia..." << RST << std::endl;
+	src->learnMateria(new Cure());
+
+	/* ===================================================== */
+	banner("🧬 CHARACTER CLONING EXPERIMENT");
+
+	Character *alice = new Character("Alice");
+	std::cout << BLU << "🧪 Cloning Alice..." << RST << std::endl;
+
+	ICharacter *clone = new Character(*alice);
+
+	std::cout << GRN << "✅ Clone created" << RST << std::endl;
+	delete alice;
+	delete clone;
+
+	/* ===================================================== */
+	banner("🎒 EQUIP PHASE – LOADOUT MADNESS");
+
+	ICharacter *me = new Character("Neo");
+
+	AMateria *tmp;
+
+	std::cout << CYN << "⚙️ Creating ICE materia" << RST << std::endl;
+	tmp = src->createMateria("ice");
+	me->equip(tmp);
+
+	std::cout << CYN << "⚙️ Creating CURE materia" << RST << std::endl;
+	tmp = src->createMateria("cure");
+	me->equip(tmp);
+
+	std::cout << RED << "❓ Summoning UNKNOWN materia [hi]" << RST << std::endl;
+	tmp = src->createMateria("hi");
+	me->equip(tmp);
+
+	std::cout << YEL << "⚠️ Forcing equip overflow..." << RST << std::endl;
+	me->equip(new Cure());
+	me->equip(new Ice());
+	me->equip(new Ice());
+
+	/* ===================================================== */
+	banner("🧤 UNEQUIP CHAOS TEST");
+
+	std::cout << MAG << "🧤 Unequip slot 2" << RST << std::endl;
+	me->unequip(2);
+
+	std::cout << MAG << "🧤 Unequip slot 2 again (ghost slot)" << RST << std::endl;
+	me->unequip(2);
+
+	std::cout << RED << "💣 Unequip slot 6 (out of bounds)" << RST << std::endl;
+	me->unequip(6);
+
+	std::cout << RED << "💣 Unequip slot -1 (illegal)" << RST << std::endl;
+	me->unequip(-1);
+
+	/* ===================================================== */
+	banner("⚔️ COMBAT SIMULATION");
+
+	ICharacter *bob = new Character("Bob");
+
+	std::cout << GRN << "🎯 Valid attacks" << RST << std::endl;
+	me->use(0, *bob);
+	me->use(1, *bob);
+
+	std::cout << RED << "🚫 Invalid attacks" << RST << std::endl;
+	me->use(2, *bob);
+	me->use(6, *bob);
+	me->use(-42, *bob);
+
+	/* ===================================================== */
+	banner("🧹 MEMORY PURGE");
+
+	delete bob;
+	delete me;
+	delete src;
+
+	std::cout << BOLD << GRN << "🏁 ALL TESTS COMPLETE — NO SURVIVORS\n" << RST;
+	std::cout << DIM << "Run Valgrind to confirm absolute dominance.\n" << RST;
+
+	return 0;
 }
