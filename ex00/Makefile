@@ -13,7 +13,7 @@
 NAME = EX00
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-SRCS = main.cpp Animal.cpp Dog.cpp Cat.cpp
+SRCS = main.cpp Animal.cpp Dog.cpp Cat.cpp WrongAnimal.cpp WrongCat.cpp
 OBJS = $(SRCS:.cpp=.o)
 RM = rm -f
 
@@ -22,7 +22,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
-%.o: %.cpp Animal.hpp Makefile
+%.o: %.cpp Animal.hpp WrongAnimal.hpp Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
